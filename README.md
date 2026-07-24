@@ -12,3 +12,7 @@
 ## Лицензия
 
 GPL v3.
+
+## Ссылка на мод
+
+https://minecraft-inside.ru/abyss/189188-additional-things.html
