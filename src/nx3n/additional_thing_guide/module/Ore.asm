@@ -1,12 +1,11 @@
 default rel
 global ore
 
-extern printf                           ; Вывод текста
+extern colored_print, printf            ; Вывод текста
 extern _getch                           ; Символ | Char
 extern console_clear                    ; Очистка
-extern back                             ; Глобальные Строки
+extern back2menu                        ; Вернуться в меню, текст
 extern color_green, color_red, color_def; Цвета
-extern colored_print
 
 %define itemCount 6
 
@@ -177,8 +176,7 @@ red_nethrite:
     jmp return_back
 
 return_back:
-    lea rcx, [back]
-    call colored_print
+    call back2menu
     call _getch
     call console_clear
     call color_def

@@ -1,12 +1,11 @@
 default rel
 global armor_and_tools
 
-extern printf                           ; Вывод текста
+extern colored_print, printf            ; Вывод текста
 extern _getch                           ; Символ | Char
 extern console_clear                    ; Очистка
-extern back                             ; Глобальные Строки
+extern back2menu                        ; Вернуться в меню, текст
 extern color_green, color_red, color_def; Цвета
-extern colored_print
 
 %define itemCount 14
 
@@ -170,7 +169,7 @@ section .data
         db "        - Снижает весь урон на 30%.", 10
         db "Уровень добычи - $g5$d.", 0
 
-    red_nethrite_message:
+    red_nethrite_message_1:
         db "$dКраснонезеритовые инструменты и броня.", 10
         db "Крафт:", 10
         db "    Предметы крафтятся в столе кузнеца: Кузнечный шаблон ''Красный незерит'' + вещь из красных алмазов + слиток красного незерита.", 10
@@ -184,8 +183,10 @@ section .data
         db "        - Увеличивают скорость игрока на 70% без изменения FOV;", 10
         db "        - Увеличивают высоту шага игрока;", 10
         db "            $s*с 0.6 до 1*$d", 10
-        db "        - Убирают урон от падения.", 10
-        db "    Полный сет брони:", 10
+        db "        - Убирают урон от падения.", 0
+
+    red_nethrite_message_2:
+        db "$d  Полный сет брони:", 10
         db "        - Блокирует урон от огня, лавы, падения, сталктитов и сталагмитов, столкновения со стеной, адского и небесного урона, утопления, застревания в блоках, раздавливания;", 10
         db "        - Отменяет 50% урона;", 10
         db "        - Ускоряет регенерацию в 2 раза.", 10
@@ -200,7 +201,7 @@ section .data
         db "            *поставленные игроками блоки не дублируются*$d", 10
         db "Уровень добычи - $g6$d.", 0
 
-    enderite_message:
+    enderite_message_1:
         db "$dЭндеритовые инструменты и броня.", 10
         db "Крафт:", 10
         db "    Предметы крафтятся в столе кузнеца: Кузнечный шаблон ''Эндерит'' + вещь из красного неезрита + слиток эндерита.", 10
@@ -215,8 +216,9 @@ section .data
         db "        - Увеличивают высоту шага игрока;", 10
         db "            $s*с 0.6 до 1*$d", 10
         db "        - Убирают замедление при ходьбе на блоках, которые замедляют движение;", 10
-        db "        - Убирают урон от падения.", 10
-        db "    Полный сет брони:", 10
+        db "        - Убирают урон от падения.", 0
+    enderite_message_2:
+        db "$d  Полный сет брони:", 10
         db "        - Блокирует урон от огня, лавы, падения, сталктитов и сталагмитов, столкновения со стеной, адского и небесного урона, утопления, застревания в блоках, раздавливания;", 10
         db "        - Отменяет 80% урона;", 10
         db "        - Ускоряет регенерацию в 3 раза.", 10
@@ -408,19 +410,22 @@ wolfram:
 
 red_nethrite:
     call console_clear
-    lea rcx, [red_nethrite_message]
+    lea rcx, [red_nethrite_message_1]
+    call colored_print
+    lea rcx, [red_nethrite_message_2]
     call colored_print
     jmp return_back
 
 enderite:
     call console_clear
-    lea rcx, [enderite_message]
+    lea rcx, [enderite_message_1]
+    call colored_print
+    lea rcx, [enderite_message_2]
     call colored_print
     jmp return_back
 
 return_back:
-    lea rcx, [back]
-    call colored_print
+    call back2menu
     call _getch
     call console_clear
     call color_def

@@ -1,13 +1,14 @@
 default rel
 global main
-global back
+global back2menu
 
-extern printf, ExitProcess                  ; Основное
+extern colored_print, printf                ; Вывод текста
 extern SetConsoleOutputCP, SetConsoleCP     ; Локализация
 extern _getch                               ; Символ | Char
 extern ore, armor_and_tools, food, mod_info ; Модули
-extern console_clear                        ; Очистка
 extern color_green, color_red, color_def    ; Цвета
+extern console_clear                        ; Очистка
+extern ExitProcess                          ; Выход
 
 %define itemCount 5
 
@@ -176,3 +177,10 @@ selected_low:
 selected_high:
     mov byte [selected], 1
     ret
+
+back2menu:
+   sub rsp, 40
+   lea rcx, [back]
+   call colored_print
+   add rsp, 40
+   ret

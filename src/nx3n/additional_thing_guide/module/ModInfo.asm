@@ -1,7 +1,7 @@
 default rel
 global mod_info
 
-extern colored_print, _getch, back
+extern colored_print, _getch, back2menu
 
 section .data
     mod_info_message:
@@ -10,7 +10,7 @@ section .data
         db "Разработчик: $cnx3n$d.", 10
         db "", 10
         db "Приложение: $rСправочник по моду Additional Things$d.", 10
-        db "Версия: 1.0, $grelease$d.", 10
+        db "Версия: 1.0.1, $grelease$d.", 10
         db "Разработчик: $cnx3n$d.", 0
 
     skip db "", 13, 10, 0
@@ -22,8 +22,7 @@ mod_info:
     lea rcx,[mod_info_message]
     call colored_print
 
-    lea rcx, [back]
-    call colored_print
+    call back2menu
 
     call _getch
 
