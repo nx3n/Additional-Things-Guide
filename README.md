@@ -22,3 +22,8 @@ https://minecraft-inside.ru/abyss/189188-additional-things.html
 1. Скачайте папку `src/` и файл `build.bat`;
 2. Поместите их в 1 папку;
 3. Запустите `build.bat`, а после удачной сборки закройте консоль.
+
+## Проверка на вирусы
+
+virustotal: www.virustotal.com/gui/file/87f68b9d7a81416fd3f05e06aeb0d049aa42dbfcb58ed5305e39802fd65b3ab7?nocache=1
+Если вы не знакомы с Assembler, вы можете показать исходный код любой современной нейросети и попросить её объяснить, что делает программа.
