@@ -16,3 +16,9 @@ GPL v3.
 ## Ссылка на мод
 
 https://minecraft-inside.ru/abyss/189188-additional-things.html
+
+## Сборка
+
+1. Скачайте папку `src/` и файл `build.bat`;
+2. Поместите их в 1 папку;
+3. Запустите `build.bat`, а после удачной сборки закройте консоль.
