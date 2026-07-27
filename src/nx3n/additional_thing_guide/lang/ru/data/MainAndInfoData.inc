@@ -10,9 +10,9 @@ ru_main_exit db "6) Выйти.", 13, 10, 0
 
 ru_mod_info_message:
     db "$dМод: $rAdditional Things$d.", 10
-    db "Версия: 2.0, $grelease$d.", 10
+    db "Версия: 2.1, $grelease$d.", 10
     db "Разработчик: $cnx3n$d.", 10
     db "", 10
     db "Приложение: $rСправочник по моду Additional Things$d.", 10
-    db "Версия: 1.0.1, $grelease$d.", 10
+    db "Версия: 1.1, $grelease$d.", 10
     db "Разработчик: $cnx3n$d.", 0

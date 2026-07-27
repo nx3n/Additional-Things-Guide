@@ -10,9 +10,9 @@ en_main_exit db "6) Exit.", 13, 10, 0
 
 en_mod_info_message:
     db "$dMod: $rAdditional Things$d.", 10
-    db "Version: 2.0, $grelease$d.", 10
+    db "Version: 2.1, $grelease$d.", 10
     db "Developer: $cnx3n$d.", 10
     db "", 10
     db "Application: $rAdditional Things Guide$d.", 10
-    db "Version: 1.0.1, $grelease$d.", 10
+    db "Version: 1.1, $grelease$d.", 10
     db "Developer: $cnx3n$d.", 0
