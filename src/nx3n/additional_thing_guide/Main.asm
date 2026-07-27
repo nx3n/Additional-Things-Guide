@@ -1,34 +1,30 @@
 default rel
 global main
-global back2menu
+global selected_lang
+global select_language
+global lang_config
 
-extern colored_print, printf                ; Вывод текста
-extern SetConsoleOutputCP, SetConsoleCP     ; Локализация
-extern _getch                               ; Символ | Char
-extern ore, armor_and_tools, food, mod_info ; Модули
-extern color_green, color_red, color_def    ; Цвета
-extern console_clear                        ; Очистка
-extern ExitProcess                          ; Выход
+extern colored_print, printf                ; Output text | Вывод текста
+extern SetConsoleOutputCP, SetConsoleCP     ; Localisation | Локализация
+extern _getch                               ; Char | Символ
+extern main_menu, lang                      ; Modules | Модули
+extern color_green, color_red, color_def    ; Colors | Цвета
+extern console_clear                        ; Clear | Очистка
+extern config, config_write                 ; Config | Конфиг
+extern module                               ; Flag for main_menu | Флаг для main_menu
 
-%define itemCount 5
+%define itemCount 2
 
 section .data
-    back db 10, "$sНажми на любую клавишу, что бы вернуться обратно.$d", 0
-
-    message db "Additional Things - Справочник.", 13, 10, 0
-    item1 db "1) Информация о рудах.", 13, 10, 0
-    item2 db "2) Информация о еде.", 13, 10, 0
-    item3 db "3) Информация о броне и инструментах.", 13, 10, 0
-    item4 db "4) Информация о моде и приложении.", 13, 10, 0
-    item5 db "5) Выйти.", 13, 10, 0
+    selected_lang db 0
+    select_lang db "Select language | Выбери язык:", 13, 10, 0
+    ru db "Русский.", 13, 10, 0
+    en db "English.", 13, 10, 0
 
     selected db 1
     menu:
-        dq item1
-        dq item2
-        dq item3
-        dq item4
-        dq item5
+        dq ru
+        dq en
 
 section .text
 main:
@@ -39,8 +35,14 @@ main:
 	mov rcx, 65001
 	call SetConsoleCP
 
-at_message:
-    mov r15, 0
+cfg_check:
+    call config
+    cmp byte [selected_lang], 1
+    je case_1
+    cmp byte [selected_lang], 2
+    je case_2
+
+select_language:
     call draw_menu
 
 ; SELECT
@@ -78,12 +80,6 @@ checkEnter:
     je case_1
     cmp eax, 2
     je case_2
-    cmp eax, 3
-    je case_3
-    cmp eax, 4
-    je case_4
-    cmp eax, 5
-    je exit
 
     jmp select_menu
 
@@ -93,7 +89,7 @@ draw_menu:
     call console_clear
 
     call color_def
-    lea rcx, [message]
+    lea rcx, [select_lang]
     call printf
 
     xor r12, r12
@@ -129,39 +125,24 @@ draw_done:
 
 ; CASES
 case_1:
-    call console_clear
-    call color_def
-    call ore
-    cmp r15, 1
-    je at_message
-    jmp case_1
+    mov [selected_lang], 1
+    call config_write
+    jmp call_main_menu
 
 case_2:
-    call console_clear
-    call food
-    cmp r15, 1
-    je at_message
-    jmp case_2
+    mov [selected_lang], 2
+    call config_write
 
-case_3:
-    call console_clear
-    call armor_and_tools
-    cmp r15, 1
-    je at_message
-    jmp case_3
-
-case_4:
-    call console_clear
-    call mod_info
-    cmp r15, 1
-    je at_message
-    jmp case_4
+call_main_menu:
+    call lang
+    mov [module], 1
+    call main_menu
+    jmp call_main_menu
 
 ; UTILS
 exit:
-    xor ecx, ecx
     add rsp, 40
-    jmp ExitProcess
+    ret
 
 check_selected:
     cmp byte [selected], 1
@@ -177,10 +158,3 @@ selected_low:
 selected_high:
     mov byte [selected], 1
     ret
-
-back2menu:
-   sub rsp, 40
-   lea rcx, [back]
-   call colored_print
-   add rsp, 40
-   ret

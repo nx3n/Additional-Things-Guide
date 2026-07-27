@@ -1,31 +1,34 @@
 default rel
-global ore
+global main_menu
+global back2menu
+global module
 
-extern module                           ; Flag for main_menu | Флаг для main_menu
-extern colored_print, printf            ; Output Text | Вывод текста
-extern _getch                           ; Char | Символ
-extern console_clear                    ; Clear | Очистка
-extern back2menu                        ; Back to menu | Вернуться в меню
-extern color_green, color_red, color_def; Colors | Цвета
+extern select_language
+extern colored_print, printf                ; Output text | Вывод текста
+extern _getch                               ; Char | Символ
+extern ore, armor_and_tools, food, mod_info ; Modules | Модули
+extern color_green, color_red, color_def    ; Colors | Цвета
+extern console_clear                        ; Clear |Очистка
+extern ExitProcess                          ; Exit | Выход
 ; Strings | Строки
-extern select_ore
-extern ore_menu
-extern red_diamond_message, sky_crystal_message, hell_crystal_message, wolfram_message, red_netherite_message
-
-%include "../macro/MacroPrint.inc"
+extern back
+extern at_guide, main_menu_message
 
 %define itemCount 6
 
 section .data
     selected db 1
+    module db 0
 
 section .text
-ore:
+main_menu:
     sub rsp, 40
 
-ore_start:
+at_message:
+    mov [module], 0
     call draw_menu
 
+; SELECT
 select_menu:
     call _getch
     cmp al, 224
@@ -57,15 +60,15 @@ checkEnter:
     movzx eax, byte [selected]
 
     cmp eax, 1
-    je red_diamond
+    je case_1
     cmp eax, 2
-    je sky_crystal
+    je case_2
     cmp eax, 3
-    je hell_crystal
+    je case_3
     cmp eax, 4
-    je wolfram
+    je case_4
     cmp eax, 5
-    je red_nethrite
+    je case_5
     cmp eax, 6
     je exit
 
@@ -77,7 +80,7 @@ draw_menu:
     call console_clear
 
     call color_def
-    mov rcx, [select_ore]
+    mov rcx, [at_guide]
     call printf
 
     xor r12, r12
@@ -100,7 +103,7 @@ draw_selected:
     call color_green
 
 draw_print:
-    lea rbx, [ore_menu]
+    lea rbx, [main_menu_message]
     mov rcx, [rbx + r12*8]
     call printf
 
@@ -112,33 +115,48 @@ draw_done:
     ret
 
 ; CASES
-red_diamond:
-    print red_diamond_message
-
-sky_crystal:
-    print sky_crystal_message
-
-hell_crystal:
-    print hell_crystal_message
-
-wolfram:
-    print wolfram_message
-
-red_nethrite:
-    print red_netherite_message
-
-return_back:
-    call back2menu
-    call _getch
+case_1:
     call console_clear
     call color_def
-    jmp ore_start
+    call ore
+    cmp [module], 1
+    je at_message
+    jmp case_1
 
+case_2:
+    call console_clear
+    call food
+    cmp [module], 1
+    je at_message
+    jmp case_2
+
+case_3:
+    call console_clear
+    call armor_and_tools
+    cmp [module], 1
+    je at_message
+    jmp case_3
+
+case_4:
+    call console_clear
+    call mod_info
+    cmp [module], 1
+    je at_message
+    jmp case_4
+
+case_5:
+    call console_clear
+    sub rsp, 40
+    call select_language
+    cmp [module], 1
+    je at_message
+    jmp case_5
+
+; UTILS
 exit:
-    add rsp, 40
     xor ecx, ecx
-    mov [module], 1
-    ret
+    add rsp, 40
+    jmp ExitProcess
 
 check_selected:
     cmp byte [selected], 1
@@ -154,3 +172,10 @@ selected_low:
 selected_high:
     mov byte [selected], 1
     ret
+
+back2menu:
+   sub rsp, 40
+   mov rcx, [back]
+   call colored_print
+   add rsp, 40
+   ret

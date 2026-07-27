@@ -1,18 +1,19 @@
 default rel
-global ore
+global drinks
 
-extern module                           ; Flag for main_menu | Флаг для main_menu
-extern colored_print, printf            ; Output Text | Вывод текста
+extern food_module                      ; Flag for food_menu | Флаг для food_menu
+extern colored_print, printf            ; Output text | Вывод текста
 extern _getch                           ; Char | Символ
 extern console_clear                    ; Clear | Очистка
 extern back2menu                        ; Back to menu | Вернуться в меню
 extern color_green, color_red, color_def; Colors | Цвета
 ; Strings | Строки
-extern select_ore
-extern ore_menu
-extern red_diamond_message, sky_crystal_message, hell_crystal_message, wolfram_message, red_netherite_message
+extern select_drink
+extern drink_menu
+extern cup_of_tea_message, cup_of_cocoa_message, cup_of_coffee_message
+extern cup_of_lemonade_message, rainbow_cocktail_message
 
-%include "../macro/MacroPrint.inc"
+%include "../../macro/MacroPrint.inc"
 
 %define itemCount 6
 
@@ -20,10 +21,10 @@ section .data
     selected db 1
 
 section .text
-ore:
+drinks:
     sub rsp, 40
 
-ore_start:
+drinks_start:
     call draw_menu
 
 select_menu:
@@ -57,15 +58,15 @@ checkEnter:
     movzx eax, byte [selected]
 
     cmp eax, 1
-    je red_diamond
+    je cup_of_tea
     cmp eax, 2
-    je sky_crystal
+    je cup_of_cocoa
     cmp eax, 3
-    je hell_crystal
+    je cup_of_coffee
     cmp eax, 4
-    je wolfram
+    je cup_of_lemonade
     cmp eax, 5
-    je red_nethrite
+    je rainbow_cocktail
     cmp eax, 6
     je exit
 
@@ -77,7 +78,7 @@ draw_menu:
     call console_clear
 
     call color_def
-    mov rcx, [select_ore]
+    mov rcx, [select_drink]
     call printf
 
     xor r12, r12
@@ -100,7 +101,7 @@ draw_selected:
     call color_green
 
 draw_print:
-    lea rbx, [ore_menu]
+    lea rbx, [drink_menu]
     mov rcx, [rbx + r12*8]
     call printf
 
@@ -111,33 +112,31 @@ draw_done:
     add rsp, 40
     ret
 
-; CASES
-red_diamond:
-    print red_diamond_message
+cup_of_tea:
+    print cup_of_tea_message
 
-sky_crystal:
-    print sky_crystal_message
+cup_of_cocoa:
+    print cup_of_cocoa_message
 
-hell_crystal:
-    print hell_crystal_message
+cup_of_coffee:
+    print cup_of_coffee_message
 
-wolfram:
-    print wolfram_message
+cup_of_lemonade:
+    print cup_of_lemonade_message
 
-red_nethrite:
-    print red_netherite_message
+rainbow_cocktail:
+    print rainbow_cocktail_message
 
 return_back:
     call back2menu
     call _getch
     call console_clear
     call color_def
-    jmp ore_start
+    jmp drinks_start
 
 exit:
     add rsp, 40
-    xor ecx, ecx
-    mov [module], 1
+    mov [food_module], 1
     ret
 
 check_selected:

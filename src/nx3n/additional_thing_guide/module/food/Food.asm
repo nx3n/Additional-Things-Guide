@@ -1,29 +1,34 @@
 default rel
-global ore
+global food
+global food_module
 
 extern module                           ; Flag for main_menu | Флаг для main_menu
-extern colored_print, printf            ; Output Text | Вывод текста
+extern colored_print, printf            ; Output text | Вывод текста
 extern _getch                           ; Char | Символ
 extern console_clear                    ; Clear | Очистка
 extern back2menu                        ; Back to menu | Вернуться в меню
 extern color_green, color_red, color_def; Colors | Цвета
 ; Strings | Строки
-extern select_ore
-extern ore_menu
-extern red_diamond_message, sky_crystal_message, hell_crystal_message, wolfram_message, red_netherite_message
+extern select_food
+extern food_menu
+extern lemon_message, fried_flesh_message, berry_pie_message, soups_message
+extern shawarma_message, pink_gold_carrot_message, pink_gold_apple_message
+extern enchanted_pink_gold_apple_message
+extern drinks
 
-%include "../macro/MacroPrint.inc"
+%include "../../macro/MacroPrint.inc"
 
-%define itemCount 6
+%define itemCount 10
 
 section .data
     selected db 1
+    food_module db 1
 
 section .text
-ore:
+food:
     sub rsp, 40
 
-ore_start:
+food_start:
     call draw_menu
 
 select_menu:
@@ -56,17 +61,27 @@ checkEnter:
 
     movzx eax, byte [selected]
 
+    mov [food_module], 0
+
     cmp eax, 1
-    je red_diamond
+    je lemon
     cmp eax, 2
-    je sky_crystal
+    je fried_flesh
     cmp eax, 3
-    je hell_crystal
+    je berry_pie
     cmp eax, 4
-    je wolfram
+    je soups
     cmp eax, 5
-    je red_nethrite
+    je shawarma
     cmp eax, 6
+    je pink_gold_carrot
+    cmp eax, 7
+    je pink_gold_apple
+    cmp eax, 8
+    je enchanted_pink_gold_apple
+    cmp eax, 9
+    je _drinks
+    cmp eax, 10
     je exit
 
     jmp select_menu
@@ -77,7 +92,7 @@ draw_menu:
     call console_clear
 
     call color_def
-    mov rcx, [select_ore]
+    mov rcx, [select_food]
     call printf
 
     xor r12, r12
@@ -100,7 +115,7 @@ draw_selected:
     call color_green
 
 draw_print:
-    lea rbx, [ore_menu]
+    lea rbx, [food_menu]
     mov rcx, [rbx + r12*8]
     call printf
 
@@ -112,27 +127,43 @@ draw_done:
     ret
 
 ; CASES
-red_diamond:
-    print red_diamond_message
+lemon:
+    print lemon_message
 
-sky_crystal:
-    print sky_crystal_message
+fried_flesh:
+    print fried_flesh_message
 
-hell_crystal:
-    print hell_crystal_message
+berry_pie:
+    print berry_pie_message
 
-wolfram:
-    print wolfram_message
+soups:
+    print soups_message
 
-red_nethrite:
-    print red_netherite_message
+shawarma:
+    print shawarma_message
+
+pink_gold_carrot:
+    print pink_gold_carrot_message
+
+pink_gold_apple:
+    print pink_gold_apple_message
+
+enchanted_pink_gold_apple:
+    print enchanted_pink_gold_apple_message
+
+_drinks:
+    call console_clear
+    call drinks
+    cmp [food_module], 1
+    je food_start
+    jmp _drinks
 
 return_back:
     call back2menu
     call _getch
     call console_clear
     call color_def
-    jmp ore_start
+    jmp food_start
 
 exit:
     add rsp, 40
@@ -146,7 +177,6 @@ check_selected:
     cmp byte [selected], itemCount
     jg selected_high
     ret
-
 selected_low:
     mov byte [selected], itemCount
     ret
