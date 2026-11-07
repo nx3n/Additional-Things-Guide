@@ -10,9 +10,9 @@ en_main_exit db "6) Exit.", 13, 10, 0
 
 en_mod_info_message:
     db "$dMod: $rAdditional Things$d.", 10
-    db "Version:",modVer,", $g",branch,"$d.", 10
+    db "Version: ",modVer,", $g",branch,"$d.", 10
     db "Developer: $c",author,"$d.", 10
     db "", 10
     db "Application: $rAdditional Things Guide$d.", 10
-    db "Version:",appVer,", $g",branch,"$d.", 10
+    db "Version: ",appVer,", $g",branch,"$d.", 10
     db "Developer: $c",author,"$d.", 0

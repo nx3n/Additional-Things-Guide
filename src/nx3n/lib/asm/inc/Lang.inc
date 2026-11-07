@@ -3,8 +3,8 @@
     mov [rel %2], rax
 %endmacro
 
-%define modVer 2.2
-%define appVer 2.0
+%define modVer '2.2'
+%define appVer '2.0'
 %define author 'nx3n'
 %define branch 'release'
 

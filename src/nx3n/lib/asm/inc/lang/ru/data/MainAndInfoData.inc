@@ -10,9 +10,9 @@ ru_main_exit db "6) Выйти.", 13, 10, 0
 
 ru_mod_info_message:
     db "$dМод: $rAdditional Things$d.", 10
-    db "Версия:",modVer,", $g",branch,"$d.", 10
+    db "Версия: ",modVer,", $g",branch,"$d.", 10
     db "Разработчик: $c",author,"$d.", 10
     db "", 10
     db "Приложение: $rСправочник по моду Additional Things$d.", 10
-    db "Версия:",appVer,", $g",branch,"$d.", 10
+    db "Версия: ",appVer,", $g",branch,"$d.", 10
     db "Разработчик: $c",author,"$d.", 0
